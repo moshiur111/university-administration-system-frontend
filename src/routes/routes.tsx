@@ -1,6 +1,6 @@
 import Home from "../pages/Home";
-import Login from "../pages/Login";
-import type { TRoutes } from "../types/route.types";
+import Login from "../pages/auth/Login";
+import type { TRoutes } from "../types";
 
 export const publicRoutes: TRoutes[] = [
   {
