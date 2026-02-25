@@ -1,13 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 type TAuthState = {
-  user: null | object;
-  token: null | string;
+  user: object | null;
+  token: string | null;
+  role: string | null;
 };
 
 const initialState: TAuthState = {
   user: null,
   token: null,
+  role: null,
 };
 
 export const authSlice = createSlice({
@@ -15,13 +17,15 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      const { user, token } = action.payload;
+      const { user, token, role } = action.payload;
       state.user = user;
       state.token = token;
+      state.role = role;
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
+      state.role = null;
     },
   },
 });

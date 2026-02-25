@@ -1,28 +1,37 @@
 import { Button, Form, Input } from "antd";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { setUser } from "../../features/auth/authSlice";
 import { useLoginMutation } from "../../redux/modules/authApi";
 import type { TLoginForm } from "../../types";
+import { verifyToken } from "../../utils/verifyToken";
 
 const Login = () => {
   const [login] = useLoginMutation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const onFinish = async (data: TLoginForm) => {
     const userInfo = {
       id: data.userId,
       password: data.password,
-    }
+    };
 
     try {
       const res = await login(userInfo).unwrap();
 
+      const token = res.data.accessToken;
+      const user = verifyToken(token);
+
       dispatch(
         setUser({
-          user: res.data.user,
-          token: res.data.accessToken,
+          user,
+          token,
+          role: user.role,
         }),
       );
+
+      navigate(`/${user.role}/dashboard`);
     } catch (error) {
       console.error("Login failed", error);
     }
