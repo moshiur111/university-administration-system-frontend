@@ -1,11 +1,27 @@
+import { Layout } from "antd";
 import { Outlet } from "react-router-dom";
+
+const { Header, Content } = Layout;
 
 const MainLayout = () => {
   return (
-    <div>
-      <h1>This is MainLayout component</h1>
-      <Outlet />
-    </div>
+    <Layout style={{ minHeight: "100vh" }}>
+      {/* Header */}
+      <Header
+        style={{
+          color: "white",
+          fontSize: "18px",
+          fontWeight: "bold",
+        }}
+      >
+        University Administration System
+      </Header>
+
+      {/* Content */}
+      <Content style={{ padding: "24px" }}>
+        <Outlet />
+      </Content>
+    </Layout>
   );
 };
 
