@@ -2,8 +2,10 @@ import type { ReactNode } from "react";
 
 export type TRoutes = {
   path?: string;
-  index?: boolean; 
-  element: ReactNode;
+  index?: boolean;
+  element?: ReactNode;
   children?: TRoutes[];
   roles?: string[];
+  label?: string;
+  icon?: ReactNode;
 };
