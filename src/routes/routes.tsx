@@ -1,11 +1,13 @@
+import { Navigate } from "react-router-dom";
 import AdminLayout from "../layout/AdminLayout";
 import MainLayout from "../layout/MainLayout";
 import Home from "../pages/Home";
-import AdminDashboard from "../pages/admin/AdminDashboard";
 import Login from "../pages/auth/Login";
 import type { TRoutes } from "../types";
+import { adminRoutes } from "./admin.routes";
 
 export const publicRoutes: TRoutes[] = [
+  // Public Layout
   {
     path: "/",
     element: <MainLayout />,
@@ -16,19 +18,25 @@ export const publicRoutes: TRoutes[] = [
       },
     ],
   },
+
+  // Auth Route
   {
     path: "/login",
     element: <Login />,
   },
+
+  // Admin Panel (Protected)
   {
     path: "/admin",
     element: <AdminLayout />,
     roles: ["admin"],
     children: [
+      // Default redirect: /admin → /admin/dashboard
       {
-        path: "dashboard",
-        element: <AdminDashboard />,
+        index: true,
+        element: <Navigate to="dashboard" replace />,
       },
+      ...adminRoutes,
     ],
   },
 ];
