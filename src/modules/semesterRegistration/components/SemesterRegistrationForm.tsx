@@ -1,12 +1,15 @@
 import { Button, Card, Col, Row } from "antd";
-import type { FieldValues, SubmitHandler } from "react-hook-form";
+import type { FieldValues, UseFormReturn } from "react-hook-form";
 import UMDatePicker from "../../../components/form/UMDatePicker";
 import UMForm from "../../../components/form/UMForm";
 import UMInput from "../../../components/form/UMInput";
 import UMSelect from "../../../components/form/UMSelect";
 
 type TProps = {
-  onSubmit: SubmitHandler<FieldValues>;
+  onSubmit: (
+    data: FieldValues,
+    methods: UseFormReturn<FieldValues>,
+  ) => Promise<void>;
   academicSemesterOptions: { label: string; value: string }[];
   isLoading: boolean;
 };
