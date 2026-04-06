@@ -5,13 +5,16 @@ const { Header, Content } = Layout;
 
 const MainLayout = () => {
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "100vh", background: "#f5f7fa" }}>
       {/* Header */}
       <Header
         style={{
           color: "white",
-          fontSize: "18px",
-          fontWeight: "bold",
+          fontSize: "20px",
+          fontWeight: 600,
+          display: "flex",
+          alignItems: "center",
+          paddingInline: "24px",
         }}
       >
         University Administration System
@@ -19,7 +22,9 @@ const MainLayout = () => {
 
       {/* Content */}
       <Content style={{ padding: "24px" }}>
-        <Outlet />
+        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+          <Outlet />
+        </div>
       </Content>
     </Layout>
   );

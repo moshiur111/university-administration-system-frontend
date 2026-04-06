@@ -6,9 +6,9 @@ import {
 import { Button, Layout, Space, theme, Typography } from "antd";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { useAppDispatch } from "../app/hooks";
 import Sidebar from "../components/admin/Sidebar";
-import { logout } from "../features/auth/authSlice";
+import { logout } from "../redux/features/auth/authSlice";
+import { useAppDispatch } from "../redux/hooks";
 
 const { Header, Content, Sider } = Layout;
 const { Text } = Typography;
