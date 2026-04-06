@@ -1,5 +1,5 @@
 import type { RouteObject } from "react-router-dom";
-import ProtectedRoute from "../components/ProtectedRoute";
+import ProtectedRoute from "../layout/ProtectedRoute";
 import type { TRoutes } from "../types";
 
 export const generateRoutes = (routes: TRoutes[]): RouteObject[] => {
