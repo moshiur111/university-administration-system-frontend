@@ -4,6 +4,8 @@ import {
   UserAddOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import CreateSemesterRegistration from "../modules/semesterRegistration/pages/CreateSemesterRegistration";
+import RegisteredSemesters from "../modules/semesterRegistration/pages/RegisteredSemesters";
 import CreateStudent from "../modules/student/pages/CreateStudent";
 import StudentDetails from "../modules/student/pages/StudentDetails";
 import StudentList from "../modules/student/pages/StudentList";
@@ -36,6 +38,21 @@ export const adminRoutes: TRoutes[] = [
       {
         path: "students/:studentId",
         element: <StudentDetails />,
+      },
+    ],
+  },
+  {
+    label: "Course Management",
+    children: [
+      {
+        label: "Semester Registration",
+        path: "semester-registration",
+        element: <CreateSemesterRegistration />,
+      },
+      {
+        label: "Registered Semesters",
+        path: "registered-semesters",
+        element: <RegisteredSemesters />,
       },
     ],
   },
