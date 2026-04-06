@@ -1,8 +1,8 @@
 import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../app/hooks";
-import { setUser } from "../../features/auth/authSlice";
-import { useLoginMutation } from "../../redux/modules/authApi";
+import { useLoginMutation } from "../../redux/features/auth/authApi";
+import { setUser } from "../../redux/features/auth/authSlice";
+import { useAppDispatch } from "../../redux/hooks";
 import type { TLoginForm } from "../../types";
 import { verifyToken } from "../../utils/verifyToken";
 
