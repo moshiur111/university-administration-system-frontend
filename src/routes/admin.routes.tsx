@@ -4,6 +4,8 @@ import {
   UserAddOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import Courses from "../modules/course/pages/Courses";
+import CreateCourse from "../modules/course/pages/CreateCourse";
 import CreateSemesterRegistration from "../modules/semesterRegistration/pages/CreateSemesterRegistration";
 import RegisteredSemesters from "../modules/semesterRegistration/pages/RegisteredSemesters";
 import CreateStudent from "../modules/student/pages/CreateStudent";
@@ -53,6 +55,16 @@ export const adminRoutes: TRoutes[] = [
         label: "Registered Semesters",
         path: "registered-semesters",
         element: <RegisteredSemesters />,
+      },
+      {
+        label: "Create Course",
+        path: "create-course",
+        element: <CreateCourse />,
+      },
+      {
+        label: "Courses",
+        path: "courses",
+        element: <Courses />,
       },
     ],
   },
