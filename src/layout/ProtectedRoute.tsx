@@ -7,13 +7,13 @@ type Props = {
   allowedRoles?: string[];
 };
 const ProtectedRoute = ({ children, allowedRoles }: Props) => {
-  const { token, role } = useAppSelector((state) => state.auth);
+  const { token, user } = useAppSelector((state) => state.auth);
 
   if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(role!)) {
+  if (allowedRoles && (!user || !allowedRoles.includes(user.role))) {
     return <Navigate to="/" replace />;
   }
 
