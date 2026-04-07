@@ -6,6 +6,8 @@ import {
 } from "@ant-design/icons";
 import Courses from "../modules/course/pages/Courses";
 import CreateCourse from "../modules/course/pages/CreateCourse";
+import CreateOfferedCourse from "../modules/offeredCourse/pages/CreateOfferedCourse";
+import OfferedCourses from "../modules/offeredCourse/pages/OfferedCourses";
 import CreateSemesterRegistration from "../modules/semesterRegistration/pages/CreateSemesterRegistration";
 import RegisteredSemesters from "../modules/semesterRegistration/pages/RegisteredSemesters";
 import CreateStudent from "../modules/student/pages/CreateStudent";
@@ -65,6 +67,16 @@ export const adminRoutes: TRoutes[] = [
         label: "Courses",
         path: "courses",
         element: <Courses />,
+      },
+      {
+        label: "Create Offered Course",
+        path: "create-offered-course",
+        element: <CreateOfferedCourse />,
+      },
+      {
+        label: "Offered Courses",
+        path: "Offered Courses",
+        element: <OfferedCourses />,
       },
     ],
   },
