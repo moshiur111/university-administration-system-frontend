@@ -1,5 +1,5 @@
 export type TLoginForm = {
-  userId: string;
+  id: string;
   password: string;
 };
 
@@ -8,9 +8,13 @@ export type TAuthUser = {
   role: string;
 };
 
+export type TApiResponse<T> = {
+  success: boolean;
+  message: string;
+  data: T;
+};
+
 export type TLoginResponse = {
-  data: {
-    user: TAuthUser;
-    accessToken: string;
-  };
+  accessToken: string;
+  needsPasswordChange: boolean;
 };
