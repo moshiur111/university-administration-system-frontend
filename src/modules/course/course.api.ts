@@ -21,8 +21,8 @@ const courseApi = baseApi.injectEndpoints({
       },
       transformResponse: (response: TResponse<TCourse[]>) => {
         return {
-          data: response.data,
           meta: response.meta,
+          data: response.data,
         };
       },
       providesTags: ["Course"],
