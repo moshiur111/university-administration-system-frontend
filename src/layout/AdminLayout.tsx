@@ -5,10 +5,10 @@ import {
 } from "@ant-design/icons";
 import { Button, Layout, Space, theme, Typography } from "antd";
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import Sidebar from "../components/admin/Sidebar";
 import { logout } from "../redux/features/auth/authSlice";
-import { useAppDispatch } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 const { Header, Content, Sider } = Layout;
 const { Text } = Typography;
@@ -16,6 +16,17 @@ const { Text } = Typography;
 const AdminLayout = () => {
   const dispatch = useAppDispatch();
   const [collapsed, setCollapsed] = useState(false);
+  const { user } = useAppSelector((state) => state.auth);
+
+  // 🚨 Protect route
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // 🚨 Role protection
+  if (user.role !== "admin") {
+    return <Navigate to="/" replace />;
+  }
 
   const {
     token: { colorBgContainer, borderRadiusLG },
