@@ -44,7 +44,7 @@ const Login = () => {
         duration: 2000,
       });
 
-      navigate(`/${user.role}`);
+      navigate(`/${user.role}/dashboard`);
     } catch (err) {
       const error = err as FetchBaseQueryError;
       console.log(error);
