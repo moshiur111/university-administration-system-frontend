@@ -25,3 +25,11 @@ export type TFaculty = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type TFacultyQueryParams = {
+  page?: number;
+  limit?: number;
+  status?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+};

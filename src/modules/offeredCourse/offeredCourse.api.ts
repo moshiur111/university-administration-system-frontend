@@ -1,6 +1,7 @@
 import { baseApi } from "../../redux/api/baseApi";
-import type { TQueryParam, TResponse } from "../../types";
+import type { TMeta, TQueryParam, TResponse } from "../../types";
 import type {
+  TFacultyOfferedCourse,
   TOfferedCourse,
   TStudentOfferedCourse,
 } from "./offeredCourse.types";
@@ -52,6 +53,41 @@ const offeredCourseApi = baseApi.injectEndpoints({
       },
       providesTags: ["OfferedCourse"],
     }),
+
+    getFacultyOfferedCourses: builder.query<
+      { data: TFacultyOfferedCourse[]; meta: TMeta },
+      Record<string, unknown> | void
+    >({
+      query: (args) => {
+        const params = new URLSearchParams();
+
+        if (args) {
+          Object.entries(args).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+              params.append(key, String(value));
+            }
+          });
+        }
+
+        return {
+          url: "/offered-courses/faculty-offered-courses",
+          method: "GET",
+          params,
+        };
+      },
+
+      transformResponse: (response: TResponse<TFacultyOfferedCourse[]>) => ({
+        data: response.data,
+        meta: response.meta ?? {
+          page: 1,
+          limit: 10,
+          total: 0,
+          totalPage: 0,
+        },
+      }),
+
+      providesTags: ["OfferedCourse"],
+    }),
   }),
 });
 
@@ -59,4 +95,5 @@ export const {
   useCreateOfferedCourseMutation,
   useGetAllOfferedCoursesQuery,
   useGetStudentOfferedCoursesQuery,
+  useGetFacultyOfferedCoursesQuery,
 } = offeredCourseApi;
