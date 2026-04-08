@@ -5,7 +5,7 @@ export type TRoutes = {
   index?: boolean;
   element?: ReactNode;
   children?: TRoutes[];
-  roles?: string[];
+  role?: string[];
   label?: string;
   icon?: ReactNode;
 };

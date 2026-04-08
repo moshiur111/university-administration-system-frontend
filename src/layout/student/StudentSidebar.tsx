@@ -1,16 +1,16 @@
 import { Menu } from "antd";
 import { useLocation } from "react-router-dom";
-import { adminRoutes } from "../../routes/admin.routes";
+import { studentRoutes } from "../../routes/student.routes";
 import { generateSidebarItems } from "../../utils/sidebarGenerator";
 
 type Props = {
   collapsed: boolean;
 };
 
-const Sidebar = ({ collapsed }: Props) => {
+const StudentSidebar = ({ collapsed }: Props) => {
   const location = useLocation();
 
-  const items = generateSidebarItems(adminRoutes, "/admin");
+  const items = generateSidebarItems(studentRoutes, "/student");
 
   return (
     <div
@@ -36,7 +36,7 @@ const Sidebar = ({ collapsed }: Props) => {
           transition: "all 0.2s ease",
         }}
       >
-        {collapsed ? "UA" : "Uni Admin"}
+        {collapsed ? "US" : "Uni Student"}
       </div>
 
       {/* Menu */}
@@ -44,7 +44,7 @@ const Sidebar = ({ collapsed }: Props) => {
         theme="dark"
         mode="inline"
         selectedKeys={[location.pathname]}
-        defaultOpenKeys={["User Management"]} // group auto open
+        defaultOpenKeys={["Student"]}
         items={items}
         style={{
           flex: 1,
@@ -56,4 +56,4 @@ const Sidebar = ({ collapsed }: Props) => {
   );
 };
 
-export default Sidebar;
+export default StudentSidebar;

@@ -30,6 +30,8 @@ const Login = () => {
       const token = res.data.accessToken;
       const user = verifyToken(token);
 
+      console.log({ user });
+
       dispatch(
         setUser({
           user,
@@ -42,9 +44,10 @@ const Login = () => {
         duration: 2000,
       });
 
-      navigate("/admin");
+      navigate(`/${user.role}`);
     } catch (err) {
       const error = err as FetchBaseQueryError;
+      console.log(error);
 
       const message =
         (error.data as { message?: string })?.message ||

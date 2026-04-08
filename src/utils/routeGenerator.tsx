@@ -13,8 +13,8 @@ export const generateRoutes = (routes: TRoutes[]): RouteObject[] => {
 
     return {
       path: route.path,
-      element: route.roles ? (
-        <ProtectedRoute allowedRoles={route.roles}>
+      element: route.role ? (
+        <ProtectedRoute allowedRoles={route.role}>
           {route.element}
         </ProtectedRoute>
       ) : (

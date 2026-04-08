@@ -4,14 +4,17 @@ import type { TRoutes } from "../types";
 
 type TMenuItem = Required<MenuProps>["items"][number];
 
-export const generateSidebarItems = (routes: TRoutes[]): TMenuItem[] => {
+export const generateSidebarItems = (
+  routes: TRoutes[],
+  basePath: string,
+): TMenuItem[] => {
   return routes.reduce((acc: TMenuItem[], route: TRoutes) => {
     // Single route
     if (route.path && route.label) {
       acc.push({
-        key: `/admin/${route.path}`,
+        key: `${basePath}/${route.path}`,
         icon: route.icon,
-        label: <Link to={`/admin/${route.path}`}>{route.label}</Link>,
+        label: <Link to={`${basePath}/${route.path}`}>{route.label}</Link>,
       });
     }
 
@@ -24,9 +27,9 @@ export const generateSidebarItems = (routes: TRoutes[]): TMenuItem[] => {
         children: route.children
           .filter((child: TRoutes) => child.path && child.label)
           .map((child: TRoutes) => ({
-            key: `/admin/${child.path}`,
+            key: `${basePath}/${child.path}`,
             icon: child.icon,
-            label: <Link to={`/admin/${child.path}`}>{child.label}</Link>,
+            label: <Link to={`${basePath}/${child.path}`}>{child.label}</Link>,
           })),
       });
     }

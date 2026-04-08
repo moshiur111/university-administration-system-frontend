@@ -1,6 +1,9 @@
 import { baseApi } from "../../redux/api/baseApi";
-import type { TResponse } from "../../types";
-import type { TOfferedCourse } from "./offeredCourse.types";
+import type { TQueryParam, TResponse } from "../../types";
+import type {
+  TOfferedCourse,
+  TStudentOfferedCourse,
+} from "./offeredCourse.types";
 
 const offeredCourseApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -25,8 +28,35 @@ const offeredCourseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["OfferedCourse"],
     }),
+
+    getStudentOfferedCourses: builder.query({
+      query: (args) => {
+        const params = new URLSearchParams();
+        if (args) {
+          args.forEach((item: TQueryParam) =>
+            params.append(item.name, item.value as string),
+          );
+        }
+
+        return {
+          url: "/offered-courses/student-offered-courses",
+          method: "GET",
+          params: params,
+        };
+      },
+      transformResponse: (response: TResponse<TStudentOfferedCourse[]>) => {
+        return {
+          data: response.data,
+          meta: response.meta,
+        };
+      },
+      providesTags: ["OfferedCourse"],
+    }),
   }),
 });
 
-export const { useCreateOfferedCourseMutation, useGetAllOfferedCoursesQuery } =
-  offeredCourseApi;
+export const {
+  useCreateOfferedCourseMutation,
+  useGetAllOfferedCoursesQuery,
+  useGetStudentOfferedCoursesQuery,
+} = offeredCourseApi;
