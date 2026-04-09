@@ -179,7 +179,11 @@ const MainLayout = () => {
             zIndex: 10,
           }}
         >
-          <Row gutter={[32, 32]} justify="center" textAlign="center">
+          <Row
+            gutter={[32, 32]}
+            justify="center"
+            style={{ textAlign: "center" }}
+          >
             <Col xs={24} md={8}>
               <TeamOutlined
                 style={{ fontSize: 36, color: "#3b82f6", marginBottom: 16 }}

@@ -8,7 +8,7 @@ import { logout, setUser } from "../../modules/auth/authSlice";
 import type { RootState } from "../store";
 
 export const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api/v1",
+  baseUrl: "https://university-administration-system-ba.vercel.app/api/v1",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;

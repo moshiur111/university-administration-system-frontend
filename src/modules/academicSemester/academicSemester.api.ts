@@ -1,5 +1,5 @@
 import { baseApi } from "../../redux/api/baseApi";
-import type { TQueryParams, TResponse } from "../../types";
+import type { TQueryParam, TResponse } from "../../types";
 import type { TAcademicSemester } from "./academicSemester.types";
 
 const academicSemesterApi = baseApi.injectEndpoints({
@@ -8,7 +8,7 @@ const academicSemesterApi = baseApi.injectEndpoints({
       query: (args) => {
         const params = new URLSearchParams();
         if (args) {
-          args.forEach((item: TQueryParams) => {
+          args.forEach((item: TQueryParam) => {
             params.append(item.name, item.value as string);
           });
         }

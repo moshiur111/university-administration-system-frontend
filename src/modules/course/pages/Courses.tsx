@@ -1,7 +1,7 @@
 import type { TableColumnsType } from "antd";
 import { Empty, Skeleton, Table, Typography } from "antd";
 import { useGetAllCoursesQuery } from "../course.api";
-import type { TCourse } from "../Course.types";
+import type { TCourse } from "../course.types";
 
 const { Text, Title } = Typography;
 

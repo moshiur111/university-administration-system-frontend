@@ -1,6 +1,6 @@
 import { baseApi } from "../../redux/api/baseApi";
 import type { TQueryParam, TResponse } from "../../types";
-import type { TCourse } from "./Course.types";
+import type { TCourse } from "./course.types";
 
 const courseApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
