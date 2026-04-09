@@ -4,7 +4,7 @@ import type {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { logout, setUser } from "../features/auth/authSlice";
+import { logout, setUser } from "../../modules/auth/authSlice";
 import type { RootState } from "../store";
 
 export const baseQuery = fetchBaseQuery({
