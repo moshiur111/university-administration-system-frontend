@@ -7,8 +7,14 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { logout, setUser } from "../../modules/auth/authSlice";
 import type { RootState } from "../store";
 
+const BASE_API = import.meta.env.VITE_BASE_API as string;
+
+if (!BASE_API) {
+  throw new Error("❌ VITE_BASE_API is not defined");
+}
+
 export const baseQuery = fetchBaseQuery({
-  baseUrl: "https://uas-backend-production-8a46.up.railway.app/api/v1",
+  baseUrl: BASE_API,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
@@ -29,13 +35,10 @@ const baseQueryWithRefreshToken: BaseQueryFn<
   let result = await baseQuery(args, api, extraOptions);
 
   if (result?.error?.status === 401) {
-    const res = await fetch(
-      "https://uas-backend-production-8a46.up.railway.app/api/v1/auth/refresh-token",
-      {
-        method: "POST",
-        credentials: "include",
-      },
-    );
+    const res = await fetch(`${BASE_API}/auth/refresh-token`, {
+      method: "POST",
+      credentials: "include",
+    });
 
     const data = await res.json();
 
