@@ -6,9 +6,9 @@ import {
 import { Button, Layout, Space, theme, Typography } from "antd";
 import { useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import Sidebar from "../components/admin/Sidebar";
-import { logout } from "../redux/features/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { logout } from "../../modules/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import AdminSidebar from "./AdminSidebar";
 
 const { Header, Content, Sider } = Layout;
 const { Text } = Typography;
@@ -18,12 +18,12 @@ const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const { user } = useAppSelector((state) => state.auth);
 
-  // 🚨 Protect route
+  // Protect route
   if (!user) {
     return <Navigate to="/login" replace />;
   }
 
-  // 🚨 Role protection
+  // Role protection
   if (user.role !== "admin") {
     return <Navigate to="/" replace />;
   }
@@ -51,7 +51,7 @@ const AdminLayout = () => {
           boxShadow: "2px 0 8px rgba(0,0,0,0.04)",
         }}
       >
-        <Sidebar collapsed={collapsed} />
+        <AdminSidebar collapsed={collapsed} />
       </Sider>
 
       {/* Main Layout */}

@@ -6,7 +6,7 @@ import {
 import { Button, Layout, Space, theme, Typography } from "antd";
 import { useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { logout } from "../../redux/features/auth/authSlice";
+import { logout } from "../../modules/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import FacultySidebar from "./FacultySidebar";
 
