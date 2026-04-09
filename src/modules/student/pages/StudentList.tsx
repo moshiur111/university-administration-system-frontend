@@ -1,5 +1,15 @@
 import type { TableColumnsType, TableProps } from "antd";
-import { Button, Modal, Pagination, Space, Table } from "antd";
+import {
+  Button,
+  Empty,
+  Grid,
+  Modal,
+  Pagination,
+  Skeleton,
+  Space,
+  Table,
+  Typography,
+} from "antd";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
@@ -10,12 +20,17 @@ import {
 } from "../student.api";
 import type { TStudent } from "../student.types";
 
+const { Title } = Typography;
+const { useBreakpoint } = Grid;
+
 export type TTableData = Pick<
   TStudent,
   "_id" | "fullName" | "id" | "email" | "contactNo"
 >;
 
 const StudentList = () => {
+  const screens = useBreakpoint();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<TTableData | null>(
     null,
@@ -23,14 +38,16 @@ const StudentList = () => {
   const [page, setPage] = useState(1);
   const [params, setParams] = useState<TQueryParam[]>([]);
 
-  const { data: studentData, isFetching } = useGetAllStudentsQuery([
+  const {
+    data: studentData,
+    isLoading, // first load
+    isFetching, // refetch
+  } = useGetAllStudentsQuery([
     { name: "limit", value: 10 },
     { name: "page", value: page },
     { name: "sort", value: "id" },
     ...params,
   ]);
-
-  // console.log(studentData);
 
   const [blockStudent, { isLoading: isBlocking }] = useBlockStudentMutation();
 
@@ -62,13 +79,6 @@ const StudentList = () => {
     setIsModalOpen(false);
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  // console.log(studentData);
-  // console.log({ isLoading, isFetching });
-
   const metaData = studentData?.meta;
 
   const tableData =
@@ -80,44 +90,50 @@ const StudentList = () => {
       contactNo,
     })) ?? [];
 
+  // Responsive columns
   const columns: TableColumnsType<TTableData> = [
     {
       title: "Name",
       dataIndex: "fullName",
-      showSorterTooltip: { target: "full-header" },
+      ellipsis: true,
     },
     {
-      title: "Roll No.",
+      title: "Roll",
       dataIndex: "id",
-      showSorterTooltip: { target: "full-header" },
+      responsive: ["sm"],
     },
     {
       title: "Email",
       dataIndex: "email",
-      showSorterTooltip: { target: "full-header" },
+      responsive: ["md"],
+      ellipsis: true,
     },
     {
-      title: "Contact No.",
+      title: "Contact",
       dataIndex: "contactNo",
-      showSorterTooltip: { target: "full-header" },
+      responsive: ["lg"],
     },
     {
       title: "Action",
-      key: "x",
-      render: (item) => {
-        return (
-          <Space>
-            <Link to={`/admin/students/${item._id}`}>
-              <Button>Details</Button>
-            </Link>
-            <Button>Update</Button>
-            <Button danger onClick={() => handleBlockClick(item)}>
-              Block
-            </Button>
-          </Space>
-        );
-      },
-      width: "1%",
+      key: "action",
+      fixed: screens.md ? "right" : undefined,
+      render: (item) => (
+        <Space wrap>
+          <Link to={`/admin/students/${item._id}`}>
+            <Button size={screens.xs ? "small" : "middle"}>Details</Button>
+          </Link>
+
+          <Button size={screens.xs ? "small" : "middle"}>Update</Button>
+
+          <Button
+            danger
+            size={screens.xs ? "small" : "middle"}
+            onClick={() => handleBlockClick(item)}
+          >
+            Block
+          </Button>
+        </Space>
+      ),
     },
   ];
 
@@ -131,38 +147,61 @@ const StudentList = () => {
       const queryParams: TQueryParam[] = [];
 
       filters.name?.forEach((item) =>
-        queryParams.push({
-          name: "name",
-          value: item,
-        }),
-      );
-
-      filters.year?.forEach((item) =>
-        queryParams.push({
-          name: "year",
-          value: item,
-        }),
+        queryParams.push({ name: "name", value: item }),
       );
 
       setParams(queryParams);
     }
   };
 
+  // Skeleton for first load
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <Skeleton.Input active block style={{ height: 32 }} />
+        <Skeleton active paragraph={{ rows: 6 }} />
+      </div>
+    );
+  }
+
   return (
-    <>
+    <div className="space-y-4">
+      {/* Header */}
+      <Title level={4} style={{ margin: 0 }}>
+        Students
+      </Title>
+
+      {/* Table */}
       <Table<TTableData>
         rowKey="_id"
-        loading={isFetching}
+        loading={isFetching} // spinner for refetch
         columns={columns}
         dataSource={tableData}
         onChange={onChange}
         pagination={false}
+        scroll={{ x: "max-content" }}
+        locale={{
+          emptyText: <Empty description="No students found" />,
+        }}
       />
+
+      {/* Pagination */}
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <Pagination
+          current={page}
+          onChange={(value) => setPage(value)}
+          pageSize={metaData?.limit}
+          total={metaData?.total}
+          showSizeChanger
+        />
+      </div>
+
+      {/* Modal */}
       <Modal
         title="Confirm Block"
         open={isModalOpen}
         onOk={handleOk}
-        onCancel={handleCancel}
+        onCancel={() => setIsModalOpen(false)}
         okText="Yes, Block"
         cancelText="Cancel"
         confirmLoading={isBlocking}
@@ -172,13 +211,7 @@ const StudentList = () => {
           <strong>{selectedStudent?.fullName}</strong>?
         </p>
       </Modal>
-      <Pagination
-        current={page}
-        onChange={(value) => setPage(value)}
-        pageSize={metaData?.limit}
-        total={metaData?.total}
-      />
-    </>
+    </div>
   );
 };
 

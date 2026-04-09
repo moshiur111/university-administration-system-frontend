@@ -22,12 +22,13 @@ const SemesterRegistrationForm = ({
   return (
     <Card
       title="Create Semester Registration"
-      style={{ maxWidth: 700, margin: "0 auto" }}
+      style={{ borderRadius: 12 }}
+      styles={{ body: { padding: "16px 20px" } }}
     >
       <UMForm onSubmit={onSubmit}>
-        <Row gutter={16}>
+        <Row gutter={[12, 12]}>
           {/* Academic Semester */}
-          <Col span={24}>
+          <Col xs={24}>
             <UMSelect
               label="Academic Semester"
               name="academicSemester"
@@ -36,30 +37,32 @@ const SemesterRegistrationForm = ({
           </Col>
 
           {/* Dates */}
-          <Col span={12}>
+          <Col xs={24} sm={12}>
             <UMDatePicker label="Start Date" name="startDate" />
           </Col>
 
-          <Col span={12}>
+          <Col xs={24} sm={12}>
             <UMDatePicker label="End Date" name="endDate" />
           </Col>
 
           {/* Credits */}
-          <Col span={12}>
+          <Col xs={24} sm={12}>
             <UMInput label="Min Credit" name="minCredit" type="number" />
           </Col>
 
-          <Col span={12}>
+          <Col xs={24} sm={12}>
             <UMInput label="Max Credit" name="maxCredit" type="number" />
           </Col>
         </Row>
 
-        <div style={{ marginTop: 20, textAlign: "right" }}>
+        {/* Submit Button */}
+        <div style={{ marginTop: 16 }}>
           <Button
             type="primary"
             htmlType="submit"
             loading={isLoading}
             disabled={!academicSemesterOptions?.length}
+            block // full width on mobile
           >
             Create Registration
           </Button>

@@ -1,5 +1,14 @@
 import type { MenuProps, TableColumnsType } from "antd";
-import { Button, Dropdown, Table, Tag, Typography } from "antd";
+import {
+  Button,
+  Dropdown,
+  Empty,
+  Grid,
+  Skeleton,
+  Table,
+  Tag,
+  Typography,
+} from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -11,7 +20,8 @@ import {
 } from "../semesterRegistration.api";
 import type { TSemesterRegistration } from "../semesterRegistration.types";
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
+const { useBreakpoint } = Grid;
 
 export type TTableData = Pick<
   TSemesterRegistration,
@@ -20,7 +30,6 @@ export type TTableData = Pick<
   name: string;
 };
 
-// Status Config
 const STATUS_OPTIONS = [
   { label: "Upcoming", key: "UPCOMING" },
   { label: "Ongoing", key: "ONGOING" },
@@ -34,14 +43,19 @@ const STATUS_COLOR_MAP: Record<string, string> = {
 };
 
 const RegisteredSemesters = () => {
-  const { data, isFetching } = useGetAllRegisteredSemestersQuery(undefined);
+  const screens = useBreakpoint();
+
+  const {
+    data,
+    isLoading, // first load
+    isFetching, // refetch
+  } = useGetAllRegisteredSemestersQuery(undefined);
 
   const [updateSemesterRegistration] = useUpdateSemesterRegistrationMutation();
 
-  // Track which row is updating
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
-  // Data Mapping
+  // Map data
   const tableData: TTableData[] =
     data?.data?.map((item) => ({
       _id: item._id,
@@ -53,7 +67,6 @@ const RegisteredSemesters = () => {
       endDate: dayjs(item.endDate).format("DD MMM YYYY"),
     })) ?? [];
 
-  // Error extractor
   const getErrorMessage = (err: unknown): string => {
     const error = err as TRTKError;
 
@@ -64,7 +77,6 @@ const RegisteredSemesters = () => {
     );
   };
 
-  // Status update handler
   const handleStatusUpdate = async (
     id: string,
     currentStatus: string,
@@ -86,24 +98,23 @@ const RegisteredSemesters = () => {
 
       toast.success(res?.message || "Status updated successfully", {
         id: toastId,
-        duration: 2000,
       });
-    } catch (err: unknown) {
+    } catch (err) {
       toast.error(getErrorMessage(err), {
         id: toastId,
-        duration: 2000,
       });
     } finally {
       setUpdatingId(null);
     }
   };
 
-  // Columns
+  // Responsive columns
   const columns: TableColumnsType<TTableData> = [
     {
       title: "Semester",
       dataIndex: "name",
       render: (text) => <Text strong>{text}</Text>,
+      ellipsis: true,
     },
     {
       title: "Status",
@@ -113,13 +124,17 @@ const RegisteredSemesters = () => {
     {
       title: "Start Date",
       dataIndex: "startDate",
+      responsive: ["sm"],
     },
     {
       title: "End Date",
       dataIndex: "endDate",
+      responsive: ["md"],
     },
     {
       title: "Action",
+      key: "action",
+      fixed: screens.md ? "right" : undefined,
       render: (record) => {
         const menu: MenuProps = {
           items: STATUS_OPTIONS.map((item) => ({
@@ -133,10 +148,11 @@ const RegisteredSemesters = () => {
         return (
           <Dropdown menu={menu} trigger={["click"]}>
             <Button
+              size={screens.xs ? "small" : "middle"}
               loading={updatingId === record._id}
               disabled={!!updatingId && updatingId !== record._id}
             >
-              Update Status
+              Update
             </Button>
           </Dropdown>
         );
@@ -144,18 +160,37 @@ const RegisteredSemesters = () => {
     },
   ];
 
+  // Skeleton for first load
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <Skeleton.Input active block style={{ height: 32 }} />
+        <Skeleton active paragraph={{ rows: 5 }} />
+      </div>
+    );
+  }
+
   return (
-    <Table<TTableData>
-      rowKey="_id"
-      loading={isFetching}
-      columns={columns}
-      dataSource={tableData}
-      pagination={{ pageSize: 10 }}
-      bordered
-      locale={{
-        emptyText: "No semester registrations found",
-      }}
-    />
+    <div className="space-y-4">
+      {/* Header */}
+      <Title level={4} style={{ margin: 0 }}>
+        Registered Semesters
+      </Title>
+
+      {/* Table */}
+      <Table<TTableData>
+        rowKey="_id"
+        loading={isFetching}
+        columns={columns}
+        dataSource={tableData}
+        scroll={{ x: "max-content" }}
+        pagination={{ pageSize: 10 }}
+        bordered
+        locale={{
+          emptyText: <Empty description="No semester registrations found" />,
+        }}
+      />
+    </div>
   );
 };
 

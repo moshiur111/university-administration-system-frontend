@@ -1,18 +1,21 @@
 import type { TableColumnsType } from "antd";
-import { Table, Tag, Typography } from "antd";
+import { Empty, Skeleton, Space, Table, Tag, Typography } from "antd";
 
 import { useGetAllOfferedCoursesQuery } from "../offeredCourse.api";
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
-// ✅ Table type
+// Table type
 export type TTableData = {
   _id: string;
-  course: {
-    title: string;
-    prefix: string;
-    code: number;
-  } | null;
+  course:
+    | {
+        title: string;
+        prefix: string;
+        code: number;
+      }
+    | string
+    | null;
   section: number;
   days: string[];
   startTime: string;
@@ -22,12 +25,12 @@ export type TTableData = {
 };
 
 const OfferedCourses = () => {
-  const { data: offeredCoursesData, isFetching } =
-    useGetAllOfferedCoursesQuery(undefined);
+  const {
+    data: offeredCoursesData,
+    isLoading, // first load
+    isFetching, // refetch
+  } = useGetAllOfferedCoursesQuery(undefined);
 
-  console.log(offeredCoursesData);
-
-  // ✅ Safe mapping
   const tableData: TTableData[] =
     offeredCoursesData?.data?.map((item) => ({
       _id: item._id,
@@ -40,7 +43,7 @@ const OfferedCourses = () => {
       isDeleted: item.isDeleted,
     })) ?? [];
 
-  // ✅ Columns
+  // Columns
   const columns: TableColumnsType<TTableData> = [
     {
       title: "Course",
@@ -49,56 +52,57 @@ const OfferedCourses = () => {
           return <Text type="secondary">N/A</Text>;
         }
 
-        // If backend returns string (ID)
         if (typeof record.course === "string") {
           return <Text strong>{record.course}</Text>;
         }
 
-        // If populated
         return (
-          <>
+          <Space wrap>
             <Tag color="blue">
               {record.course.prefix}
               {record.course.code}
             </Tag>
-            <Text style={{ marginLeft: 8 }}>{record.course.title}</Text>
-          </>
+            <Text>{record.course.title}</Text>
+          </Space>
         );
       },
+      ellipsis: true,
     },
     {
       title: "Section",
       dataIndex: "section",
       align: "center",
+      responsive: ["sm"],
     },
     {
       title: "Days",
       dataIndex: "days",
       render: (days: string[]) =>
         days.length ? (
-          <>
+          <Space wrap>
             {days.map((day) => (
-              <Tag color="blue" key={day}>
-                {day}
-              </Tag>
+              <Tag key={day}>{day}</Tag>
             ))}
-          </>
+          </Space>
         ) : (
           <Text type="secondary">N/A</Text>
         ),
+      responsive: ["md"],
     },
     {
-      title: "Class Time",
+      title: "Time",
       render: (_, record) => (
         <Text>
           {record.startTime} - {record.endTime}
         </Text>
       ),
+      responsive: ["sm"],
     },
     {
       title: "Capacity",
       dataIndex: "maxCapacity",
       align: "center",
+      responsive: ["lg"],
     },
     {
       title: "Status",
@@ -111,18 +115,37 @@ const OfferedCourses = () => {
     },
   ];
 
+  // Skeleton for first load
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <Skeleton.Input active block style={{ height: 32 }} />
+        <Skeleton active paragraph={{ rows: 6 }} />
+      </div>
+    );
+  }
+
   return (
-    <Table<TTableData>
-      rowKey="_id"
-      loading={isFetching}
-      columns={columns}
-      dataSource={tableData}
-      pagination={{ pageSize: 10 }}
-      bordered
-      locale={{
-        emptyText: "No offered courses found",
-      }}
-    />
+    <div className="space-y-4">
+      {/* Header */}
+      <Title level={4} style={{ margin: 0 }}>
+        Offered Courses
+      </Title>
+
+      {/* Table */}
+      <Table<TTableData>
+        rowKey="_id"
+        loading={isFetching}
+        columns={columns}
+        dataSource={tableData}
+        pagination={{ pageSize: 10 }}
+        bordered
+        scroll={{ x: "max-content" }}
+        locale={{
+          emptyText: <Empty description="No offered courses found" />,
+        }}
+      />
+    </div>
   );
 };
 

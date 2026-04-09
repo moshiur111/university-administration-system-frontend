@@ -12,65 +12,12 @@ import UMForm from "../../../components/form/UMForm";
 import UMInput from "../../../components/form/UMInput";
 import UMSelect from "../../../components/form/UMSelect";
 import { bloodGroupOptions, genderOptions } from "../../../constant/global";
+import type { TRTKError } from "../../../types";
 import { useGetAllAcademicDepartmentQuery } from "../../academicDepartment/academicDepartment.api";
 import { useGetAllAcademicSemesterQuery } from "../../academicSemester/academicSemester.api";
 import { useCreateStudentMutation } from "../student.api";
 import { studentSchema } from "../student.validation";
-
 const { Title } = Typography;
-
-const studentDefaultValues = {
-  name: {
-    firstName: "Muhammad",
-    middleName: "Moshiur",
-    lastName: "Rahman",
-  },
-  gender: "male",
-  // dateOfBirth: "2006-04-21",
-  bloodGroup: "A+",
-
-  // Contact Info.
-  email: "student@example.com",
-  contactNo: "01712345678",
-  emergencyContactNo: "01812345678",
-  presentAddress: "45 New Eskaton Road, Dhaka",
-  permanentAddress:
-    "Village Kalibari, Upazila Shibganj, District Chapainawabganj",
-
-  // Guardian Info.
-  guardian: {
-    fatherName: "Abdur Rahman",
-    fatherOccupation: "Doctor",
-    fatherContactNo: "01987654321",
-    motherName: "Salma Rahman",
-    motherOccupation: "Homemaker",
-    motherContactNo: "01687654321",
-  },
-
-  // local Guardian Info.
-  localGuardian: {
-    name: "Mamun Khan",
-    occupation: "Lecturer",
-    contactNo: "01587654321",
-    address: "House 88, Road 9A, Dhanmondi, Dhaka",
-  },
-
-  // Academic Info.
-  admissionSemester: "69ad522274ae72cab577bf9f",
-  academicDepartment: "6980d94a9b394741c98e37e3",
-};
-
-type TRTKError = {
-  status: number;
-  data: {
-    success: boolean;
-    message: string;
-    errorSources: {
-      path: string;
-      message: string;
-    }[];
-  };
-};
 
 const CreateStudentForm = () => {
   const [createStudent, { isLoading }] = useCreateStudentMutation();
@@ -96,8 +43,6 @@ const CreateStudentForm = () => {
   ) => {
     const toastId = toast.loading("Creating student...");
 
-    console.log({ data });
-
     try {
       const studentData = {
         password: "password111",
@@ -117,15 +62,15 @@ const CreateStudentForm = () => {
         id: toastId,
         duration: 2000,
       });
-      console.log(res);
+
       methods.reset();
     } catch (err) {
       const error = err as TRTKError;
-      console.error(error);
       const errorMessage =
         error?.data?.errorSources?.[0]?.message ??
         error?.data?.message ??
         "Something went wrong!";
+
       toast.error(errorMessage, {
         id: toastId,
         duration: 2000,
@@ -133,39 +78,51 @@ const CreateStudentForm = () => {
     }
   };
 
+  // Reusable Card Style
+  const cardStyle = {
+    marginBottom: 16,
+  };
+
+  const cardBodyStyle = {
+    padding: "12px 16px",
+  };
+
   return (
-    <UMForm
-      onSubmit={onSubmit}
-      resolver={zodResolver(studentSchema)}
-      defaultValues={studentDefaultValues}
-    >
+    <UMForm onSubmit={onSubmit} resolver={zodResolver(studentSchema)}>
       {/* Personal Info */}
-      <Card size="small" style={{ marginBottom: 16 }}>
+      <Card size="small" style={cardStyle} styles={{ body: cardBodyStyle }}>
         <Title level={5}>Personal Information</Title>
-        <Row gutter={[16, 16]}>
-          <Col span={8}>
+
+        <Row gutter={[12, 12]}>
+          <Col xs={24} sm={12} lg={8}>
             <UMInput name="name.firstName" label="First Name" />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12} lg={8}>
             <UMInput name="name.middleName" label="Middle Name" />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12} lg={8}>
             <UMInput name="name.lastName" label="Last Name" />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12} lg={8}>
             <UMSelect name="gender" label="Gender" options={genderOptions} />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12} lg={8}>
             <UMDatePicker name="dateOfBirth" label="Date of Birth" />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12} lg={8}>
             <UMSelect
               name="bloodGroup"
               label="Blood Group"
               options={bloodGroupOptions}
             />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12} lg={8}>
             <Controller
               name="profileImg"
               render={({ field: { onChange } }) => (
@@ -187,56 +144,67 @@ const CreateStudentForm = () => {
       </Card>
 
       {/* Contact Info */}
-      <Card size="small" style={{ marginBottom: 16 }}>
+      <Card size="small" style={cardStyle} styles={{ body: cardBodyStyle }}>
         <Title level={5}>Contact Information</Title>
-        <Row gutter={[16, 16]}>
-          <Col span={8}>
+
+        <Row gutter={[12, 12]}>
+          <Col xs={24} sm={12}>
             <UMInput name="email" label="Email" />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12}>
             <UMInput name="contactNo" label="Contact No" />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12}>
             <UMInput name="emergencyContactNo" label="Emergency Contact No" />
           </Col>
-          <Col span={12}>
+
+          <Col xs={24} sm={12}>
             <UMInput name="presentAddress" label="Present Address" />
           </Col>
-          <Col span={12}>
+
+          <Col xs={24}>
             <UMInput name="permanentAddress" label="Permanent Address" />
           </Col>
         </Row>
       </Card>
 
       {/* Guardian Info */}
-      <Card size="small" style={{ marginBottom: 16 }}>
+      <Card size="small" style={cardStyle} styles={{ body: cardBodyStyle }}>
         <Title level={5}>Guardian Information</Title>
-        <Row gutter={[16, 16]}>
-          <Col span={8}>
+
+        <Row gutter={[12, 12]}>
+          <Col xs={24} sm={12} lg={8}>
             <UMInput name="guardian.fatherName" label="Father Name" />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12} lg={8}>
             <UMInput
               name="guardian.fatherOccupation"
               label="Father Occupation"
             />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12} lg={8}>
             <UMInput
               name="guardian.fatherContactNo"
               label="Father Contact No"
             />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12} lg={8}>
             <UMInput name="guardian.motherName" label="Mother Name" />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12} lg={8}>
             <UMInput
               name="guardian.motherOccupation"
               label="Mother Occupation"
             />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12} lg={8}>
             <UMInput
               name="guardian.motherContactNo"
               label="Mother Contact No"
@@ -246,36 +214,42 @@ const CreateStudentForm = () => {
       </Card>
 
       {/* Local Guardian */}
-      <Card size="small" style={{ marginBottom: 16 }}>
+      <Card size="small" style={cardStyle} styles={{ body: cardBodyStyle }}>
         <Title level={5}>Local Guardian</Title>
-        <Row gutter={[16, 16]}>
-          <Col span={8}>
+
+        <Row gutter={[12, 12]}>
+          <Col xs={24} sm={12} lg={8}>
             <UMInput name="localGuardian.name" label="Name" />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12} lg={8}>
             <UMInput name="localGuardian.occupation" label="Occupation" />
           </Col>
-          <Col span={8}>
+
+          <Col xs={24} sm={12} lg={8}>
             <UMInput name="localGuardian.contactNo" label="Contact No" />
           </Col>
-          <Col span={24}>
+
+          <Col xs={24}>
             <UMInput name="localGuardian.address" label="Address" />
           </Col>
         </Row>
       </Card>
 
       {/* Academic Info */}
-      <Card size="small" style={{ marginBottom: 16 }}>
+      <Card size="small" style={cardStyle} styles={{ body: cardBodyStyle }}>
         <Title level={5}>Academic Information</Title>
-        <Row gutter={[16, 16]}>
-          <Col span={12}>
+
+        <Row gutter={[12, 12]}>
+          <Col xs={24} sm={12}>
             <UMSelect
               name="admissionSemester"
               label="Admission Semester"
               options={academicSemesterOptions}
             />
           </Col>
-          <Col span={12}>
+
+          <Col xs={24} sm={12}>
             <UMSelect
               name="academicDepartment"
               label="Academic Department"
@@ -285,16 +259,18 @@ const CreateStudentForm = () => {
         </Row>
       </Card>
 
-      <Button
-        type="primary"
-        htmlType="submit"
-        size="large"
-        loading={isLoading}
-        disabled={isLoading}
-        block
-      >
-        {isLoading ? "Creating Student..." : "Create Student"}
-      </Button>
+      {/* Submit */}
+      <div style={{ marginTop: 16 }}>
+        <Button
+          type="primary"
+          htmlType="submit"
+          size="large"
+          loading={isLoading}
+          block
+        >
+          {isLoading ? "Creating Student..." : "Create Student"}
+        </Button>
+      </div>
     </UMForm>
   );
 };

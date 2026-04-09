@@ -1,35 +1,46 @@
-import { Flex, Spin } from "antd";
+import { Card, Skeleton, Typography } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import type { FieldValues, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
-
 import type { TRTKError } from "../../../types";
 import { useGetAllAcademicDepartmentQuery } from "../../academicDepartment/academicDepartment.api";
 import { useGetAllAcademicFacultieQuery } from "../../academicFaculty/academicFaculty.api";
-import { useGetAllCoursesQuery } from "../../course/Course.api";
+import { useGetAllCoursesQuery } from "../../course/course.api";
 import { useGetEligibleFacultiesQuery } from "../../faculty/faculty.api";
 import { useGetAllRegisteredSemestersQuery } from "../../semesterRegistration/semesterRegistration.api";
 import OfferedCourseForm from "../components/OfferedCourseForm";
 import { useCreateOfferedCourseMutation } from "../offeredCourse.api";
 
+const { Title, Text } = Typography;
+
 const CreateOfferedCourse = () => {
   const [academicDepartment, setAcademicDepartment] = useState("");
 
-  const [createOfferedCourse, { isLoading }] = useCreateOfferedCourseMutation();
+  const [createOfferedCourse, { isLoading: isCreating }] =
+    useCreateOfferedCourseMutation();
 
   // Queries
-  const { data: academicFaculties } = useGetAllAcademicFacultieQuery(undefined);
-  const { data: registeredSemesters } =
+  const { data: academicFaculties, isLoading: facLoading } =
+    useGetAllAcademicFacultieQuery(undefined);
+
+  const { data: registeredSemesters, isLoading: semLoading } =
     useGetAllRegisteredSemestersQuery(undefined);
-  const { data: academicDepartments } =
+
+  const { data: academicDepartments, isLoading: deptLoading } =
     useGetAllAcademicDepartmentQuery(undefined);
-  const { data: courses } = useGetAllCoursesQuery(undefined);
+
+  const { data: courses, isLoading: courseLoading } =
+    useGetAllCoursesQuery(undefined);
 
   const { data: eligibleFaculties, isFetching } = useGetEligibleFacultiesQuery(
     { academicDepartment },
     { skip: !academicDepartment },
   );
+
+  // Combined loading state
+  const isInitialLoading =
+    facLoading || semLoading || deptLoading || courseLoading;
 
   // Options
   const academicFacultyOptions =
@@ -64,6 +75,7 @@ const CreateOfferedCourse = () => {
 
   const getErrorMessage = (err: unknown): string => {
     const error = err as TRTKError;
+
     return (
       error?.data?.errorSources?.[0]?.message ||
       error?.data?.message ||
@@ -95,26 +107,67 @@ const CreateOfferedCourse = () => {
     }
   };
 
-  if (!academicDepartments || !courses) {
+  // Skeleton for initial load
+  if (isInitialLoading) {
     return (
-      <Flex justify="center" align="center" style={{ height: "60vh" }}>
-        <Spin />
-      </Flex>
+      <div
+        style={{
+          padding: "16px",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div style={{ width: "100%", maxWidth: 900 }}>
+          <Skeleton.Input active block style={{ height: 32 }} />
+          <Skeleton active paragraph={{ rows: 6 }} />
+        </div>
+      </div>
     );
   }
 
   return (
-    <OfferedCourseForm
-      onSubmit={onSubmit}
-      isLoading={isLoading}
-      academicFacultyOptions={academicFacultyOptions}
-      semesterOptions={semesterOptions}
-      departmentOptions={departmentOptions}
-      courseOptions={courseOptions}
-      facultyOptions={facultyOptions}
-      onDepartmentChange={setAcademicDepartment}
-      facultyDisabled={!academicDepartment || isFetching}
-    />
+    <div
+      style={{
+        padding: "16px",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <div style={{ width: "100%", maxWidth: 900 }}>
+        <Card
+          style={{
+            borderRadius: 12,
+            boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+          }}
+          styles={{
+            body: { padding: "16px 20px" },
+          }}
+        >
+          {/* Header */}
+          <div style={{ marginBottom: 16 }}>
+            <Title level={4} style={{ marginBottom: 4 }}>
+              Create Offered Course
+            </Title>
+            <Text type="secondary">
+              Configure course schedule, faculty, and capacity
+            </Text>
+          </div>
+
+          {/* Form */}
+          <OfferedCourseForm
+            onSubmit={onSubmit}
+            isLoading={isCreating}
+            academicFacultyOptions={academicFacultyOptions}
+            semesterOptions={semesterOptions}
+            departmentOptions={departmentOptions}
+            courseOptions={courseOptions}
+            facultyOptions={facultyOptions}
+            onDepartmentChange={setAcademicDepartment}
+            facultyDisabled={!academicDepartment || isFetching}
+          />
+        </Card>
+      </div>
+    </div>
   );
 };
 

@@ -41,25 +41,30 @@ const OfferedCourseForm = ({
   return (
     <Card
       title="Create Offered Course"
-      style={{ maxWidth: 850, margin: "0 auto" }}
+      style={{ borderRadius: 12 }}
+      styles={{ body: { padding: "16px 20px" } }}
     >
       <UMForm onSubmit={onSubmit}>
-        <Row gutter={[16, 16]}>
-          <Col span={12}>
+        <Row gutter={[12, 12]}>
+          {/* Faculty + Semester */}
+          <Col xs={24} sm={12}>
             <UMSelect
               name="academicFaculty"
               label="Academic Faculty"
               options={academicFacultyOptions}
             />
           </Col>
-          <Col span={12}>
+
+          <Col xs={24} sm={12}>
             <UMSelect
               name="semesterRegistration"
               label="Semester"
               options={semesterOptions}
             />
           </Col>
-          <Col span={12}>
+
+          {/* Department + Faculty */}
+          <Col xs={24} sm={12}>
             <UMSelect
               name="academicDepartment"
               label="Department"
@@ -67,7 +72,8 @@ const OfferedCourseForm = ({
               onValueChange={onDepartmentChange}
             />
           </Col>
-          <Col span={12}>
+
+          <Col xs={24} sm={12}>
             <UMSelect
               name="faculty"
               label="Faculty"
@@ -75,16 +81,23 @@ const OfferedCourseForm = ({
               disabled={facultyDisabled}
             />
           </Col>
-          <Col span={12}>
+
+          {/* Course */}
+          <Col xs={24}>
             <UMSelect name="course" label="Course" options={courseOptions} />
           </Col>
-          <Col span={6}>
+
+          {/* Section + Capacity */}
+          <Col xs={24} sm={12} lg={6}>
             <UMInput name="section" label="Section" type="number" />
           </Col>
-          <Col span={6}>
+
+          <Col xs={24} sm={12} lg={6}>
             <UMInput name="maxCapacity" label="Capacity" type="number" />
           </Col>
-          <Col span={12}>
+
+          {/* Days */}
+          <Col xs={24} sm={12} lg={12}>
             <UMSelect
               mode="multiple"
               name="days"
@@ -92,14 +105,19 @@ const OfferedCourseForm = ({
               options={weekDayOptions}
             />
           </Col>
-          <Col span={12}>
+
+          {/* Time */}
+          <Col xs={24} sm={12}>
             <UMTimePicker name="startTime" label="Start Time" />
           </Col>
-          <Col span={12}>
+
+          <Col xs={24} sm={12}>
             <UMTimePicker name="endTime" label="End Time" />
           </Col>
         </Row>
-        <div style={{ marginTop: 24 }}>
+
+        {/* Submit */}
+        <div style={{ marginTop: 16 }}>
           <Button type="primary" htmlType="submit" loading={isLoading} block>
             Create Offered Course
           </Button>
