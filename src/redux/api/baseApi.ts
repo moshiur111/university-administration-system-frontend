@@ -8,7 +8,7 @@ import { logout, setUser } from "../../modules/auth/authSlice";
 import type { RootState } from "../store";
 
 export const baseQuery = fetchBaseQuery({
-  baseUrl: "https://university-administration-system-ba.vercel.app/api/v1",
+  baseUrl: import.meta.env.VITE_BASE_API,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
@@ -29,10 +29,13 @@ const baseQueryWithRefreshToken: BaseQueryFn<
   let result = await baseQuery(args, api, extraOptions);
 
   if (result?.error?.status === 401) {
-    const res = await fetch("http://localhost:5000/api/v1/auth/refresh-token", {
-      method: "POST",
-      credentials: "include",
-    });
+    const res = await fetch(
+      `${import.meta.env.VITE_BASE_API}/auth/refresh-token`,
+      {
+        method: "POST",
+        credentials: "include",
+      },
+    );
 
     const data = await res.json();
 
