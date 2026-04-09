@@ -22,11 +22,23 @@ export type TErrorSource = {
   message: string;
 };
 
+// export type TRTKError = {
+//   status: number;
+//   data: {
+//     success: boolean;
+//     message: string;
+//     errorSources?: TErrorSource[];
+//   };
+// };
+
 export type TRTKError = {
   status: number;
   data: {
     success: boolean;
     message: string;
-    errorSources?: TErrorSource[];
+    errorSources?: {
+      path: string;
+      message: string;
+    }[];
   };
 };
