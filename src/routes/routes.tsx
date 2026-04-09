@@ -1,10 +1,12 @@
 import { Navigate } from "react-router-dom";
-import AdminLayout from "../layout/AdminLayout";
 import MainLayout from "../layout/MainLayout";
+import AdminLayout from "../layout/admin/AdminLayout";
 import FacultyLayout from "../layout/faculty/FacultyLayout";
 import StudentLayout from "../layout/student/StudentLayout";
-import Home from "../pages/Home";
-import Login from "../pages/auth/Login";
+import ChangePassword from "../modules/auth/pages/ChangePassword";
+import Login from "../modules/auth/pages/Login";
+import NotFound from "../pages/NotFound";
+import Unauthorized from "../pages/Unauthorized";
 import type { TRoutes } from "../types";
 import { adminRoutes } from "./admin.routes";
 import { facultyRoutes } from "./faculty.routes";
@@ -15,18 +17,6 @@ export const publicRoutes: TRoutes[] = [
   {
     path: "/",
     element: <MainLayout />,
-    children: [
-      {
-        index: true,
-        element: <Home />,
-      },
-    ],
-  },
-
-  // Auth Route
-  {
-    path: "/login",
-    element: <Login />,
   },
 
   // Admin Panel (Protected)
@@ -41,6 +31,11 @@ export const publicRoutes: TRoutes[] = [
         element: <Navigate to="dashboard" replace />,
       },
       ...adminRoutes,
+
+      {
+        path: "*",
+        element: <NotFound />,
+      },
     ],
   },
 
@@ -56,6 +51,10 @@ export const publicRoutes: TRoutes[] = [
         element: <Navigate to="dashboard" replace />,
       },
       ...studentRoutes,
+      {
+        path: "*",
+        element: <NotFound />,
+      },
     ],
   },
 
@@ -71,6 +70,32 @@ export const publicRoutes: TRoutes[] = [
         element: <Navigate to="dashboard" replace />,
       },
       ...facultyRoutes,
+      {
+        path: "*",
+        element: <NotFound />,
+      },
     ],
+  },
+
+  // Auth Route
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/change-password",
+    element: <ChangePassword />,
+  },
+
+  // 404 Route
+  {
+    path: "*",
+    element: <NotFound />,
+  },
+
+  // Unauthorized Route
+  {
+    path: "/unauthorized",
+    element: <Unauthorized />,
   },
 ];
