@@ -13,3 +13,13 @@ export type TLoginForm = {
   userId: string;
   password: string;
 };
+
+export type TLoginResponse = {
+  accessToken: string;
+  needsPasswordChange: boolean;
+};
+
+export type TLoginRequest = {
+  id: string;
+  password: string;
+};
