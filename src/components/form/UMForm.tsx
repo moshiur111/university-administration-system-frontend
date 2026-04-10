@@ -3,33 +3,33 @@ import type { ReactNode } from "react";
 import {
   FormProvider,
   useForm,
+  type DefaultValues,
   type FieldValues,
+  type Resolver,
   type UseFormReturn,
 } from "react-hook-form";
 
-type TFormProps = {
-  onSubmit: (
-    data: FieldValues,
-    methods: UseFormReturn<FieldValues>,
-  ) => Promise<void>;
+// generic typing
+type TFormProps<T extends FieldValues> = {
+  onSubmit: (data: T, methods: UseFormReturn<T>) => Promise<void>;
   children: ReactNode;
-  defaultValues?: Record<string, any>;
-  resolver?: any;
+  defaultValues?: DefaultValues<T>;
+  resolver?: Resolver<T>;
 };
 
-const UMForm = ({
+const UMForm = <T extends FieldValues>({
   onSubmit,
   children,
   defaultValues,
   resolver,
-}: TFormProps) => {
-  const methods = useForm({
+}: TFormProps<T>) => {
+  const methods = useForm<T>({
     defaultValues,
     resolver,
     mode: "onChange",
   });
 
-  const submit = async (data: FieldValues) => {
+  const submit = async (data: T) => {
     await onSubmit(data, methods);
   };
 

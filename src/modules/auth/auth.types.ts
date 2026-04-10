@@ -8,3 +8,8 @@ export type TAuthState = {
   user: TUser | null;
   token: string | null;
 };
+
+export type TLoginForm = {
+  userId: string;
+  password: string;
+};

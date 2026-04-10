@@ -15,13 +15,20 @@ const UMInput = ({ label, name, type = "text", disabled }: TUMInputProps) => {
     <Controller
       name={name}
       control={control}
+      defaultValue=""
       render={({ field, fieldState: { error } }) => (
         <Form.Item
           label={label}
           validateStatus={error ? "error" : ""}
           help={error?.message}
         >
-          <Input {...field} type={type} disabled={disabled} />
+          <Input
+            {...field}
+            value={field.value || ""}
+            onChange={(e) => field.onChange(e.target.value)}
+            type={type}
+            disabled={disabled}
+          />
         </Form.Item>
       )}
     />

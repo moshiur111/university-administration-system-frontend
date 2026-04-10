@@ -11,15 +11,9 @@ type Props = {
   allowedRoles?: string[];
 };
 
-type TLocationState = {
-  from: {
-    pathname: string;
-  };
-};
-
 const ProtectedRoute = ({ children, allowedRoles }: Props) => {
   const token = useAppSelector(selectCurrentToken);
-  const location = useLocation() as { state: TLocationState };
+  const location = useLocation();
 
   // Memoize decoding (avoid re-running on every render)
   const user: TUser | null = useMemo(() => {

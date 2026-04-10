@@ -1,8 +1,3 @@
-export type TLoginForm = {
-  id: string;
-  password: string;
-};
-
 export type TAuthUser = {
   id: string;
   role: string;
