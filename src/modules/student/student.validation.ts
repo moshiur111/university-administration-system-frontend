@@ -50,3 +50,5 @@ export const studentSchema = z.object({
   admissionSemester: z.string().min(1, "Admission semester is required"),
   academicDepartment: z.string().min(1, "Academic department is required"),
 });
+
+export type TStudentForm = z.infer<typeof studentSchema>;

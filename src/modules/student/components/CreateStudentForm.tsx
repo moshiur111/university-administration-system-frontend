@@ -1,11 +1,7 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, Col, Form, Row, Typography, Upload } from "antd";
-import {
-  Controller,
-  type FieldValues,
-  type UseFormReturn,
-} from "react-hook-form";
+import { Controller, type UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 import UMDatePicker from "../../../components/form/UMDatePicker";
 import UMForm from "../../../components/form/UMForm";
@@ -16,7 +12,7 @@ import type { TRTKError } from "../../../types";
 import { useGetAllAcademicDepartmentQuery } from "../../academicDepartment/academicDepartment.api";
 import { useGetAllAcademicSemesterQuery } from "../../academicSemester/academicSemester.api";
 import { useCreateStudentMutation } from "../student.api";
-import { studentSchema } from "../student.validation";
+import { studentSchema, type TStudentForm } from "../student.validation";
 const { Title } = Typography;
 
 const CreateStudentForm = () => {
@@ -38,8 +34,8 @@ const CreateStudentForm = () => {
     })) || [];
 
   const onSubmit = async (
-    data: FieldValues,
-    methods: UseFormReturn<FieldValues>,
+    data: TStudentForm,
+    methods: UseFormReturn<TStudentForm>,
   ) => {
     const toastId = toast.loading("Creating student...");
 
